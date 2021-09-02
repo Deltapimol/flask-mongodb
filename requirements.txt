@@ -1,0 +1,5 @@
+flask
+flask_pymongo
+pymongo
+bcrypt
+dnspython==2.0.0
