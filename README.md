@@ -3,7 +3,7 @@
 **API Endpoints**
 
 <ol>
-<li>Create user => localhost:5000/user</li>
+<li>Create user => {hostname}:5000/api/v1/users/user</li>
 
         Request Body =
         {
@@ -12,11 +12,11 @@
             "password": "12345"
         }
 <br>
-<li>Get user => localhost:5000/user/{id}</li>
+<li>Get user => {hostname}:5000/api/v1/users/user/</li>
      <br>
-<li>List all users => localhost:5000/users</li>
+<li>List all users => {hostname}:5000/api/v1/users</li>
      <br>
-<li>Update user => localhost:5000/user/{id} </li>
+<li>Update user => {hostname}:5000/api/v1/users/user/{id} </li>
 
         Request Body =
         {
@@ -26,5 +26,5 @@
         }
 
 <br>
-<li>Delete a user => localhost:5000/user/{id}</li>
+<li>Delete a user => {hostname}:5000/api/v1/users/user/{id}</li>
 </ol>
