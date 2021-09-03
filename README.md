@@ -14,5 +14,14 @@ Request Body =>
 </ul>
 <li>Get user => localhost:5000/user/<id></li>
 <li>List all users => localhost:5000/users</li>
+<li>Update user => localhost:5000/user/<id></li>
+<ul>
+Request Body => 
+`{
+    "name": "Anmol Shinde",
+    "email": "anmolshinde108@gmail.com",
+    "password": "12345"
+}`
+</ul>
 <li>Delete a user => localhost:5000/user/<id></li>
 </ol>

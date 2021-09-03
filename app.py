@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, json, jsonify, request
+from flask import Flask, jsonify, request
 
 from flask_pymongo import PyMongo
 import pymongo
@@ -15,12 +15,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from config import MongoClass
 
 
-
 app = Flask(__name__)
 
 app.secret_key = "ZLFdHXIUeekwJCu"
 
-MONGO_CRED = MongoClass("user", "user_mongo020", "myFirstDatabase")
+MONGO_CRED = MongoClass()
 
 app.config["MONGO_URI"] = f"mongodb+srv://{MONGO_CRED.MONGO_USER}:{MONGO_CRED.MONGO_PASSWORD}@cluster0.ovq4g.mongodb.net/{MONGO_CRED.MONGO_DATABASE}?retryWrites=true&w=majority"
 
@@ -89,6 +88,30 @@ def delete(id):
         return jsonify("User does not exist"), 404
     return jsonify("User details deleted successfully"), 200
 
+@app.route('/user/<id>', methods=['PUT'])
+def update_user(id):
+    """
+    Update user details
+    """
+    _id = id
+    _json = request.json
+    _name = _json['name']
+    _email = _json['email']
+    _password = _json['password']
+
+    if _name and _email and _password and request.method == 'PUT':
+        try:
+            _hashed_password = generate_password_hash(_password)
+            id = mongodb_client.db.users.update_one({'_id': ObjectId(_id['$oid']) if '$oid' in _id else ObjectId(_id)}, {'$set': {'name': _name, 'email': _email, 'password': _hashed_password, 'update_date': datetime.now()}})
+
+            return jsonify(f"User updated successfully!"), 200
+        except DuplicateKeyError:
+            return email_already_exists()
+        except (ServerSelectionTimeoutError, ConnectionFailure):
+            return database_connection_error()
+    else:
+        return not_found() 
+    
 @app.errorhandler(404)
 def not_found():
     message = 'Not Found ' + request.url
