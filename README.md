@@ -4,24 +4,27 @@
 
 <ol>
 <li>Create user => localhost:5000/user</li>
-<ul>
-Request Body => 
-`{
-    "name": "Anmol Shinde",
-    "email": "anmolshinde106@gmail.com",
-    "password": "12345"
-}`
-</ul>
-<li>Get user => localhost:5000/user/<id></li>
+
+        Request Body =
+        {
+            "name": "Anmol Shinde",
+            "email": "anmolshinde106@gmail.com",
+            "password": "12345"
+        }
+<br>
+<li>Get user => localhost:5000/user/{id}</li>
+     <br>
 <li>List all users => localhost:5000/users</li>
-<li>Update user => localhost:5000/user/<id></li>
-<ul>
-Request Body => 
-`{
-    "name": "Anmol Shinde",
-    "email": "anmolshinde108@gmail.com",
-    "password": "12345"
-}`
-</ul>
-<li>Delete a user => localhost:5000/user/<id></li>
+     <br>
+<li>Update user => localhost:5000/user/{id} </li>
+
+        Request Body =
+        {
+            "name": "Anmol Shinde",
+            "email": "anmolshinde108@gmail.com",
+            "password": "12345"
+        }
+
+<br>
+<li>Delete a user => localhost:5000/user/{id}</li>
 </ol>
