@@ -5,10 +5,11 @@ from flask import Blueprint, jsonify, request
 from flask_pymongo import PyMongo
 import pymongo
 
-from pymongo.errors import ConnectionFailure, DuplicateKeyError, ServerSelectionTimeoutError, OperationFailure
+from pymongo.errors import ConnectionFailure, DuplicateKeyError, ServerSelectionTimeoutError
 
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+from bson.errors import InvalidId
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -58,6 +59,8 @@ def user(id):
     """
     try:
         user = mongodb_client.db.users.find_one({'_id':ObjectId(id)}, {'password': False})
+    except InvalidId:
+        return jsonify("Invalid User Id"), 400
     except (ServerSelectionTimeoutError, ConnectionFailure):
         return database_connection_error()
     
@@ -72,6 +75,8 @@ def delete(id):
     """
     try:
         user = mongodb_client.db.users.delete_one({'_id':ObjectId(id)})
+    except InvalidId:
+        return jsonify("Invalid User Id"), 400
     except (ServerSelectionTimeoutError, ConnectionFailure):
         return database_connection_error()
     
@@ -93,17 +98,23 @@ def update_user(id):
     if _name and _email and _password and request.method == 'PUT':
         try:
             _hashed_password = generate_password_hash(_password)
-            user = mongodb_client.db.users.find_one({'_id':ObjectId(id)}, {'password': False})
+            try:    
+                user = mongodb_client.db.users.find_one({'_id': ObjectId(id)}, {'password': False})
+            except InvalidId:
+                return jsonify("Invalid User Id"), 400
+            
             if user is None:
                 return jsonify("User does not exist"), 404
             _create_date = datetime.now()
             if "create_date" in user:
                 _create_date = user["create_date"]
-            updated_user = mongodb_client.db.users.update_one({'_id': ObjectId(_id['$oid']) if '$oid' in _id else ObjectId(_id)}, {'$set': {'name': _name, 'email': _email, 'password': _hashed_password, 'create_date': _create_date, 'update_date': datetime.now()}})
-
+                
+            try:
+                updated_user = mongodb_client.db.users.update_one({'_id': ObjectId(_id['$oid']) if '$oid' in _id else ObjectId(_id)}, {'$set': {'name': _name, 'email': _email, 'password': _hashed_password, 'create_date': _create_date, 'update_date': datetime.now()}})
+            except DuplicateKeyError:
+                return email_already_exists()
+            
             return jsonify(f"User updated successfully!"), 200
-        except DuplicateKeyError:
-            return email_already_exists()
         except (ServerSelectionTimeoutError, ConnectionFailure):
             return database_connection_error()
     else:
