@@ -18,7 +18,7 @@ from config import mongo as mongodb_client
 
 blog_blueprint = Blueprint("blog", import_name=__name__)
 
-@blog_blueprint.route('/blog', methods=['POST'])
+@blog_blueprint.route('', methods=['POST'])
 def add_blog():
     """
     Add a new blog to the blogs collection
@@ -52,7 +52,7 @@ def add_blog():
         if author is None:
             return jsonify(f"User with this email does not exist"), 404
         
-        mongodb_client.db.blogs.insert_one({'title': _text, 'text': _text, 'author': _author, 'email': _email, 'user_id': author['_id'], 'create_date': datetime.now(), 'publish_date': _publish_date, 'published': _publish, 'update_date': None}) 
+        mongodb_client.db.blogs.insert_one({'title': _title, 'text': _text, 'author': _author, 'email': _email, 'user_id': author['_id'], 'create_date': datetime.now(), 'publish_date': _publish_date, 'published': _publish, 'update_date': None}) 
 
         # mongodb_client.db.users.update({'email': _email}, {'$push': {'blogs': blog.inserted_id }})
         
