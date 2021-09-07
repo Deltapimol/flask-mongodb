@@ -60,7 +60,7 @@ def user(id):
     try:
         user = mongodb_client.db.users.find_one({'_id':ObjectId(id)}, {'password': False})
     except InvalidId:
-        return jsonify("Invalid User Id"), 400
+        return invalid_id("User")
     except (ServerSelectionTimeoutError, ConnectionFailure):
         return database_connection_error()
     
@@ -76,7 +76,7 @@ def delete(id):
     try:
         user = mongodb_client.db.users.delete_one({'_id':ObjectId(id)})
     except InvalidId:
-        return jsonify("Invalid User Id"), 400
+        return invalid_id("User")
     except (ServerSelectionTimeoutError, ConnectionFailure):
         return database_connection_error()
     
@@ -110,7 +110,7 @@ def update_user(id):
                 _create_date = user["create_date"]
                 
             try:
-                updated_user = mongodb_client.db.users.update_one({'_id': ObjectId(_id['$oid']) if '$oid' in _id else ObjectId(_id)}, {'$set': {'name': _name, 'email': _email, 'password': _hashed_password, 'create_date': _create_date, 'update_date': datetime.now()}})
+                mongodb_client.db.users.update_one({'_id': ObjectId(_id['$oid']) if '$oid' in _id else ObjectId(_id)}, {'$set': {'name': _name, 'email': _email, 'password': _hashed_password, 'create_date': _create_date, 'update_date': datetime.now()}})
             except DuplicateKeyError:
                 return email_already_exists()
             
@@ -120,17 +120,22 @@ def update_user(id):
     else:
         return not_found() 
     
+@user_blueprint.errorhandler(400)
+def invalid_id(entity):
+    message = f"Invalid {entity} Id"
+    return jsonify(message), 400
+    
 @user_blueprint.errorhandler(404)
 def not_found():
-    message = 'Not Found ' + request.url
+    message = "Not Found " + request.url
     return jsonify(message), 404
 
 @user_blueprint.errorhandler(409)
 def email_already_exists():
-    message = 'Conflict. User with this email address already exists.'
+    message = "Conflict. User with this email address already exists."
     return jsonify(message), 409
 
 @user_blueprint.errorhandler(500)
 def database_connection_error():
-    message = 'Unable to connect to the MongoDB server'
+    message = "Unable to connect to the MongoDB server"
     return jsonify(message), 500
