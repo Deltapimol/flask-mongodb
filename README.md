@@ -70,7 +70,7 @@
 <li> Get blogs by user id (GET) => {hostname}:5000/api/v1/blogs/user/{user_id} <br> Get all published blogs by user id (GET) => {hostname}:5000/api/v1/blogs/user/{user_id}?published=true <br>Get all unpublished blogs by user id GET) => {hostname}:5000/api/v1/blogs/user/{user_id}?published=false</li>
 </ol>
 
-### Coments collection APIs
+### Comments collection APIs
 
 <ol>
 <li>Add a comment (POST) => {hostname}:5000/api/v1/comments</li>
