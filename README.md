@@ -15,19 +15,19 @@
 <br>
 <li>Get user (GET) => {hostname}:5000/api/v1/users/user/{user_id}</li>
 <br>
-<li>Update user (PUT) => {hostname}:5000/api/v1/users/user/{user_id}</li>
-<br>
-<li>Delete a user (DELETE) => {hostname}:5000/api/v1/users/user/{id}</li>
-<br>
-<li>List all users (GET) => {hostname}:5000/api/v1/users</li>
-     <br>
+<li>Update user (PUT) => {hostname}:5000/api/v1/users/user</li>
+        
         Request Body =
-        {
+        {   "id": "61373438296c1274940e638b"
             "name": "Anmol Shinde",
             "email": "anmolshinde108@gmail.com",
             "password": "12345"
         }
    
+<br>
+<li>Delete a user (DELETE) => {hostname}:5000/api/v1/users/user/{id}</li>
+<br>
+<li>List all users (GET) => {hostname}:5000/api/v1/users</li>
 </ol>
 
 ### Blogs collection APIs
@@ -60,6 +60,7 @@
         # Pass publish = True to publish the blog
 <br>
 <li>Toggle publish/unpublish blog (PATCH) => {hostname}:5000/api/v1/blogs/toggle-publish/{blog_id}</li>
+<br>
 <li>Get all blogs (GET) =>{hostname}:5000/api/v1/blogs</li>
 <br>
 <li>Get blog by blog id (GET) => {hostname}:5000/api/v1/blogs/{blog_id}</li>
